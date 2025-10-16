@@ -20,3 +20,12 @@ body { margin:0; background:var(--bg); color:var(--text); font:14px system-ui, -
 .paybar { display:flex; gap:10px; align-items:end; border-top:1px solid #1e2735; padding:12px; background:#0f141c; }
 .paybar input { width:160px; padding:8px 10px; border-radius:10px; background:#0e151f; border:1px solid #273142; color:var(--text); }
 .foot { padding:10px 16px; color:var(--muted); border-top:1px solid #1e2735; }
+/* Modal tambah produk */
+.modal { position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; }
+.modal.hidden { display:none; }
+.dialog { width:520px; max-width:95vw; background:#0f1621; border:1px solid #1e2735; border-radius:12px; padding:16px; color:#eaeef5; }
+.dialog h3 { margin:0 0 12px 0; }
+.dialog .grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+.dialog label { display:flex; flex-direction:column; gap:6px; font-size:12px; color:#8fa1b3; }
+.dialog input { padding:8px 10px; border-radius:10px; background:#0e151f; border:1px solid #273142; color:#eaeef5; }
+.dialog .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
