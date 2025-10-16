@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kasir Web (Online)</title>
   <link rel="stylesheet" href="styles.css">
+
+  <!-- CSS modal (inline supaya tidak perlu ubah styles.css) -->
+  <style>
+    .modal { position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; z-index:50; }
+    .modal.hidden { display:none; }
+    .dialog { width:520px; max-width:95vw; background:#0f1621; border:1px solid #1e2735; border-radius:12px; padding:16px; color:#eaeef5; box-shadow:0 10px 30px rgba(0,0,0,.4); }
+    .dialog h3 { margin:0 0 12px 0; }
+    .dialog .grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .dialog label { display:flex; flex-direction:column; gap:6px; font-size:12px; color:#8fa1b3; }
+    .dialog input { padding:8px 10px; border-radius:10px; background:#0e151f; border:1px solid #273142; color:#eaeef5; }
+    .dialog .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
+  </style>
 </head>
 <body>
   <header class="topbar">
@@ -14,6 +26,8 @@
       API:
       <input id="apiBase" placeholder="https://pos-online-api.onrender.com" />
     </label>
+    <!-- tombol tambah produk -->
+    <button id="btnAddProduct" class="btn" style="margin-left:8px;">+ Produk</button>
   </header>
 
   <main class="layout">
@@ -43,6 +57,101 @@
 
   <footer class="foot">© POS Online — Demo</footer>
 
+  <!-- Modal Tambah Produk -->
+  <div id="modal" class="modal hidden">
+    <div class="dialog">
+      <h3>Tambah Produk</h3>
+      <div class="grid">
+        <label>Nama
+          <input id="p_name" />
+        </label>
+        <label>Harga (Rp)
+          <input id="p_price" type="number" min="0" />
+        </label>
+        <label>Stok
+          <input id="p_stock" type="number" min="0" value="0" />
+        </label>
+        <label>Unit
+          <input id="p_unit" value="pcs" />
+        </label>
+        <label>SKU
+          <input id="p_sku" />
+        </label>
+        <label>Barcode
+          <input id="p_barcode" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="saveProduct" class="btn primary">Simpan</button>
+        <button id="cancelProduct" class="btn">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- app utama -->
   <script src="app.js"></script>
+
+  <!-- JS ringan untuk modal & simpan produk (tanpa perlu ubah app.js) -->
+  <script>
+    // buka/tutup modal
+    function openModal(){ document.getElementById('modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
+
+    // helper ambil base API dari input (fungsi apiBase() juga sudah ada di app.js, ini fallback)
+    function _apiBase(){ return (document.getElementById('apiBase')?.value || '').trim(); }
+
+    // simpan produk baru ke backend
+    async function saveProduct(){
+      const name = document.getElementById('p_name').value.trim();
+      const price = Number(document.getElementById('p_price').value);
+      const stock = Number(document.getElementById('p_stock').value) || 0;
+      const unit  = (document.getElementById('p_unit').value || 'pcs').trim();
+      const sku = document.getElementById('p_sku').value.trim();
+      const barcode = document.getElementById('p_barcode').value.trim();
+
+      if (!name || !Number.isInteger(price)) {
+        alert('Nama & Harga (bilangan bulat Rupiah) wajib diisi');
+        return;
+      }
+
+      const base = (typeof apiBase === 'function' ? apiBase() : _apiBase());
+      try{
+        const res = await fetch(base + '/products', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ name, price: Math.round(price), stock, unit, sku, barcode })
+        });
+        if(!res.ok) throw new Error(await res.text());
+        alert('Produk tersimpan!');
+        // reset form
+        document.getElementById('p_name').value = '';
+        document.getElementById('p_price').value = '';
+        document.getElementById('p_stock').value = '0';
+        document.getElementById('p_unit').value = 'pcs';
+        document.getElementById('p_sku').value = '';
+        document.getElementById('p_barcode').value = '';
+        closeModal();
+        // refresh hasil pencarian terakhir
+        if (typeof search === 'function') search();
+      }catch(e){
+        alert('Gagal simpan: ' + e.message);
+      }
+    }
+
+    // wiring tombol
+    (function(){
+      const addBtn = document.getElementById('btnAddProduct');
+      const cancelBtn = document.getElementById('cancelProduct');
+      const saveBtn = document.getElementById('saveProduct');
+      if(addBtn) addBtn.addEventListener('click', openModal);
+      if(cancelBtn) cancelBtn.addEventListener('click', closeModal);
+      if(saveBtn) saveBtn.addEventListener('click', saveProduct);
+
+      // shortcut: Ctrl+N untuk buka modal produk
+      window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && (e.key === 'n' || e.key === 'N')) { e.preventDefault(); openModal(); }
+      });
+    })();
+  </script>
 </body>
 </html>
