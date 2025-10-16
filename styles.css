@@ -1,0 +1,22 @@
+:root { --bg:#0b0f14; --panel:#121821; --text:#eaeef5; --muted:#8fa1b3; --accent:#46a0ff; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:14px system-ui, -apple-system, Segoe UI, Roboto; }
+.topbar { display:flex; gap:12px; align-items:center; padding:10px 16px; background:#0f141c; border-bottom:1px solid #202a36; }
+.brand { font-weight:700; }
+.spacer { flex:1; }
+.api input { width:320px; padding:6px 8px; border-radius:8px; border:1px solid #273142; background:#0e151f; color:var(--text); }
+.layout { display:grid; grid-template-columns: 1.2fr .8fr; height: calc(100vh - 100px); }
+.left { border-right:1px solid #1e2735; display:flex; flex-direction:column; }
+.search { padding:12px; border-bottom:1px solid #1e2735; display:flex; gap:8px; }
+.search input { flex:1; padding:12px 14px; border-radius:10px; background:#0e151f; border:1px solid #273142; color:var(--text); }
+.btn { background:#1a2330; color:var(--text); border:1px solid #273142; padding:8px 12px; border-radius:10px; cursor:pointer; }
+.btn.primary { background: var(--accent); color:#03101e; border:none; font-weight:700; }
+.results { padding:8px; overflow:auto; }
+.product { display:flex; justify-content:space-between; align-items:center; background:#0f1621; border:1px solid #1e2735; padding:10px; border-radius:10px; margin:8px 0; }
+.ticket { padding:12px; height: calc(100% - 120px); overflow:auto; }
+.line { display:grid; grid-template-columns: 1fr 60px 90px 24px; gap:8px; align-items:center; background:#0f1621; border:1px solid #1e2735; padding:8px 10px; border-radius:10px; margin:6px 0; }
+.qty { text-align:center; }
+.sum { text-align:right; font-variant-numeric: tabular-nums; }
+.paybar { display:flex; gap:10px; align-items:end; border-top:1px solid #1e2735; padding:12px; background:#0f141c; }
+.paybar input { width:160px; padding:8px 10px; border-radius:10px; background:#0e151f; border:1px solid #273142; color:var(--text); }
+.foot { padding:10px 16px; color:var(--muted); border-top:1px solid #1e2735; }
